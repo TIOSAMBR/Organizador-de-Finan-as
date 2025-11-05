@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Organizador Financeiro</title>
+
+  <!-- Font (Poppins) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome (ícones) -->
+  <script src="https://kit.fontawesome.com/a2d9b7f3e0.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <div class="title">
+      <h1>S <span class="heart">❤️</span> D</h1>
+      <small>Te amo Dondoca</small>
+    </div>
+
+    <div class="header-actions">
+      <button id="theme-toggle" class="icon-btn" title="Alternar tema"><i class="fas fa-adjust"></i></button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="summary-section card">
+      <div class="summary-row">
+        <div>
+          <p class="muted">Receitas</p>
+          <p class="value income" id="income">R$ 0,00</p>
+        </div>
+        <div>
+          <p class="muted">Despesas</p>
+          <p class="value expense" id="expense">R$ 0,00</p>
+        </div>
+        <div>
+          <p class="muted">Saldo</p>
+          <p class="value balance" id="balance">R$ 0,00</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="filter-section card">
+      <div class="filter-row">
+        <input type="month" id="filter-month" aria-label="Filtrar por mês" />
+        <div class="filter-buttons">
+          <button id="filter-btn">Filtrar</button>
+          <button id="reset-btn" class="secondary">Tudo</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="list-section card">
+      <h2>Transações</h2>
+      <ul id="transaction-list" class="transaction-list"></ul>
+      <div class="list-empty" id="list-empty">Nenhuma transação — adicione pelo botão +</div>
+    </section>
+
+    <section class="chart-section card">
+      <h2>Distribuição</h2>
+      <canvas id="finance-chart" height="200"></canvas>
+    </section>
+  </main>
+
+  <!-- Modal: adicionar transação -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-content card">
+      <div class="modal-header">
+        <h3>Nova Transação</h3>
+      </div>
+      <form id="transaction-form" class="form">
+        <label class="label">
+          <span>Descrição</span>
+          <input type="text" id="desc" placeholder="Ex: Mercado" required />
+        </label>
+
+        <label class="label">
+          <span>Valor</span>
+          <input type="number" id="amount" placeholder="Ex: 120.50" step="0.01" required />
+        </label>
+
+        <label class="label">
+          <span>Data</span>
+          <input type="date" id="form-date" required />
+        </label>
+
+        <label class="label">
+          <span>Tipo</span>
+          <select id="type" required>
+            <option value="receita">Receita</option>
+            <option value="despesa">Despesa</option>
+          </select>
+        </label>
+
+        <div class="modal-actions">
+          <button type="submit" class="primary">Salvar</button>
+          <button type="button" id="close-modal" class="secondary">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Floating add button -->
+  <button id="add-btn" class="floating-btn" aria-label="Adicionar transação"><i class="fas fa-plus"></i></button>
+
+  <!-- Footer / Créditos -->
+  <footer class="app-footer">
+    <p>Feito com 💘 por <strong>Samuel Toledo</strong> © <span id="year"></span></p>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
