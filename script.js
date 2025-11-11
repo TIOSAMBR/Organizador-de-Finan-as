@@ -1,14 +1,16 @@
-// Elements
+// ===== ELEMENTOS =====
 const form = document.getElementById("transaction-form");
 const descInput = document.getElementById("desc");
 const amountInput = document.getElementById("amount");
 const dateInput = document.getElementById("form-date");
 const typeInput = document.getElementById("type");
+const installmentsInput = document.getElementById("installments");
 const list = document.getElementById("transaction-list");
 
 const filterMonthInput = document.getElementById("filter-month");
 const filterBtn = document.getElementById("filter-btn");
 const resetBtn = document.getElementById("reset-btn");
+const clearAllBtn = document.getElementById("clear-all-btn");
 
 const addBtn = document.getElementById("add-btn");
 const modal = document.getElementById("modal");
@@ -21,14 +23,12 @@ const emptyEl = document.getElementById("list-empty");
 const yearSpan = document.getElementById("year");
 const themeToggle = document.getElementById("theme-toggle");
 
-// Data
+// ===== DADOS =====
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 let filteredTransactions = [...transactions];
-
-// Chart
 let chart;
 
-// Utils
+// ===== FUNÇÕES =====
 function saveToLocalStorage() {
   localStorage.setItem("transactions", JSON.stringify(transactions));
 }
@@ -40,14 +40,13 @@ function formatCurrency(value) {
 function formatDateBR(isoDate) {
   const d = new Date(isoDate);
   return d.toLocaleDateString("pt-BR", {
-    weekday: "short",
     day: "2-digit",
     month: "2-digit",
     year: "numeric"
   });
 }
 
-// Render
+// ===== RESUMO =====
 function updateSummary() {
   const income = filteredTransactions
     .filter(t => t.type === "receita")
@@ -70,6 +69,7 @@ function updateSummary() {
   updateChart(income, expense);
 }
 
+// ===== LISTA =====
 function renderList() {
   list.innerHTML = "";
   if (filteredTransactions.length === 0) {
@@ -104,8 +104,7 @@ function renderList() {
     actions.style.gap = "8px";
 
     const removeBtn = document.createElement("button");
-    removeBtn.className = "icon-btn";
-    removeBtn.innerHTML = '<i class="fas fa-trash"></i>';
+    removeBtn.className = "remove-btn";
     removeBtn.title = "Remover";
     removeBtn.addEventListener("click", () => removeTransaction(t.id));
 
@@ -119,7 +118,7 @@ function renderList() {
   });
 }
 
-// Add / Remove
+// ===== ADICIONAR E REMOVER =====
 function addTransaction(transaction) {
   transactions.push(transaction);
   saveToLocalStorage();
@@ -132,29 +131,56 @@ function removeTransaction(id) {
   applyFilterCurrent();
 }
 
-// Form submit
+// ===== FORM =====
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const transaction = {
-    id: Date.now(),
-    desc: descInput.value.trim(),
-    amount: parseFloat(amountInput.value),
-    date: dateInput.value,
-    type: typeInput.value
-  };
+  const desc = descInput.value.trim();
+  const amount = parseFloat(amountInput.value);
+  const date = new Date(dateInput.value);
+  const type = typeInput.value;
+  const installments = parseInt(installmentsInput.value) || 1;
 
-  if (!transaction.desc || isNaN(transaction.amount) || !transaction.date) {
+  if (!desc || isNaN(amount) || !date) {
     alert("Preencha todos os campos corretamente.");
     return;
   }
 
-  addTransaction(transaction);
+  // === Se for parcelado ===
+  if (installments > 1) {
+    const parcelaValor = parseFloat((amount / installments).toFixed(2));
+    for (let i = 0; i < installments; i++) {
+      const parcelaDate = new Date(date);
+      parcelaDate.setMonth(date.getMonth() + i);
+
+      const transaction = {
+        id: Date.now() + i,
+        desc: `${desc} (${i + 1}/${installments})`,
+        amount: parcelaValor,
+        date: parcelaDate.toISOString().split("T")[0],
+        type
+      };
+      transactions.push(transaction);
+    }
+    alert(`Foram adicionadas ${installments} parcelas de ${formatCurrency(amount / installments)}.`);
+  } else {
+    // Transação única
+    transactions.push({
+      id: Date.now(),
+      desc,
+      amount,
+      date: date.toISOString().split("T")[0],
+      type
+    });
+  }
+
+  saveToLocalStorage();
+  applyFilterCurrent();
   form.reset();
   closeModal();
 });
 
-// Filter
+// ===== FILTROS =====
 filterBtn.addEventListener("click", () => {
   const val = filterMonthInput.value;
   if (!val) {
@@ -173,6 +199,24 @@ resetBtn.addEventListener("click", () => {
   updateSummary();
 });
 
+// ===== LIMPAR TUDO =====
+clearAllBtn.addEventListener("click", () => {
+  if (transactions.length === 0) {
+    alert("Não há transações para limpar.");
+    return;
+  }
+
+  const confirmClear = confirm("Tem certeza que deseja apagar todas as transações?");
+  if (!confirmClear) return;
+
+  transactions = [];
+  filteredTransactions = [];
+  saveToLocalStorage();
+  renderList();
+  updateSummary();
+  alert("Todas as transações foram removidas.");
+});
+
 function applyFilterCurrent() {
   const current = filterMonthInput.value;
   if (current) {
@@ -184,11 +228,12 @@ function applyFilterCurrent() {
   updateSummary();
 }
 
-// Modal
+// ===== MODAL =====
 addBtn.addEventListener("click", () => {
   modal.setAttribute("aria-hidden", "false");
   const today = new Date().toISOString().split("T")[0];
   dateInput.value = today;
+  installmentsInput.value = 1;
   setTimeout(() => descInput.focus(), 120);
 });
 
@@ -198,13 +243,13 @@ function closeModal() {
   modal.setAttribute("aria-hidden", "true");
 }
 
-// Chart (doughnut)
+// ===== GRÁFICO =====
 function updateChart(income, expense) {
   const ctx = document.getElementById("finance-chart").getContext("2d");
   if (chart) chart.destroy();
 
   const total = income + expense;
-  const data = total > 0 ? [income, expense] : [1, 1]; // evita bug quando tudo é 0
+  const data = total > 0 ? [income, expense] : [1, 1];
 
   chart = new Chart(ctx, {
     type: "doughnut",
@@ -224,7 +269,6 @@ function updateChart(income, expense) {
     options: {
       responsive: true,
       maintainAspectRatio: true,
-      aspectRatio: 1,
       cutout: '65%',
       plugins: {
         legend: {
@@ -239,8 +283,7 @@ function updateChart(income, expense) {
   });
 }
 
-
-// Theme
+// ===== TEMA =====
 function applySavedTheme() {
   const saved = localStorage.getItem("theme");
   if (saved === "light") {
@@ -256,7 +299,7 @@ themeToggle.addEventListener("click", () => {
   localStorage.setItem("theme", nowLight ? "light" : "dark");
 });
 
-// Init
+// ===== INICIALIZAÇÃO =====
 function init() {
   yearSpan.textContent = new Date().getFullYear();
   applySavedTheme();

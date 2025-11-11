@@ -366,3 +366,151 @@ button.secondary {
     padding: 12px;
   }
 }
+/* ===== BOTÃO FLUTUANTE (ADICIONAR) ===== */
+.floating-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: #000;
+  font-size: 2rem;
+  font-weight: 700;
+  border: none;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  z-index: 999;
+  transition: all 0.2s ease;
+}
+
+.floating-btn:hover,
+.floating-btn:active {
+  transform: translateY(-4px) scale(1.05);
+  filter: brightness(1.15);
+}
+
+.floating-btn::before {
+  content: "+";
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+/* ===== BOTÃO DE REMOVER (NA LISTA) ===== */
+.remove-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 82, 82, 0.15);
+  color: var(--danger);
+  font-size: 1.3rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.remove-btn:hover {
+  background: rgba(255, 82, 82, 0.3);
+  transform: scale(1.1);
+}
+
+.remove-btn::before {
+  content: "×"; /* símbolo universal de remover */
+  line-height: 1;
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 600px) {
+  .floating-btn {
+    width: 56px;
+    height: 56px;
+    font-size: 1.8rem;
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .floating-btn::before {
+    font-size: 2rem;
+  }
+
+  .remove-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+  }
+}
+/* ===== BOTÃO DE LIMPAR TUDO ===== */
+.danger-btn {
+  background: var(--danger);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.danger-btn:hover {
+  background: #ff6b6b;
+  transform: scale(1.05);
+}
+
+@media (max-width: 600px) {
+  .filter-buttons {
+    justify-content: space-between;
+    width: 100%;
+  }
+  .filter-buttons button {
+    flex: 1;
+    min-width: 30%;
+  }
+}
+/* ===== AJUSTE VISUAL DO CAMPO DE PARCELAS ===== */
+#installments {
+  background: var(--glass);
+  color: var(--text);
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  width: 100%;
+}
+
+/* Melhora o espaçamento dos labels no modal */
+.form .label span {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+/* ===== AJUSTE DO CONTAINER DE BOTÕES DE AÇÃO NA LISTA ===== */
+.transaction-list li > div:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+/* ===== EFEITO DE TOQUE MELHORADO (para celular) ===== */
+button:active,
+.floating-btn:active,
+.remove-btn:active,
+.danger-btn:active {
+  transform: scale(0.95);
+  opacity: 0.9;
+}
+
+/* ===== AJUSTE DE SOMBRA E DESTAQUE NO BOTÃO + ===== */
+.floating-btn {
+  box-shadow: 0 6px 20px rgba(0, 230, 118, 0.5);
+}
+
