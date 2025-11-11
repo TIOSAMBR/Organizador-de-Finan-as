@@ -282,93 +282,6 @@ button.secondary {
 /* ===== BOTÃO FLUTUANTE (ADICIONAR) ===== */
 .floating-btn {
   position: fixed;
-  right: 18px;
-  bottom: 18px;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.6rem;
-  background: var(--accent);
-  color: #000;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-  border: none;
-  z-index: 250;
-  transition: all 0.2s ease;
-}
-.floating-btn:hover {
-  transform: translateY(-4px) scale(1.05);
-  filter: brightness(1.1);
-}
-
-/* Corrige sobreposição no iPhone */
-@supports (-webkit-touch-callout: none) {
-  .floating-btn {
-    bottom: 28px;
-  }
-}
-
-/* ===== CHART ===== */
-.chart-section {
-  width: 100%;
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 12px;
-  display: flex;
-  justify-content: center;
-}
-#finance-chart {
-  width: 100% !important;
-  max-width: 320px !important;
-  height: auto !important;
-  aspect-ratio: 1 / 1 !important;
-}
-
-/* ===== FOOTER ===== */
-.app-footer {
-  text-align: center;
-  padding: 18px 12px;
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
-/* ===== TRANSIÇÕES ===== */
-.card, .form input, button, .floating-btn {
-  transition: all 0.18s ease;
-}
-
-/* ===== RESPONSIVIDADE ===== */
-@media (max-width: 600px) {
-  .container { padding: 0 10px 90px; }
-  .app-header .title h1 { font-size: 1.4rem; }
-  .floating-btn {
-    width: 56px;
-    height: 56px;
-    font-size: 1.3rem;
-    right: 14px;
-    bottom: 16px;
-  }
-  .icon-btn {
-    width: 34px;
-    height: 34px;
-    font-size: 1.1rem;
-  }
-  .transaction-list li {
-    padding: 8px 10px;
-  }
-  .tx-desc { max-width: 100px; font-size: 0.85rem; }
-  .tx-amount { font-size: 0.9rem; }
-  input, select, button { font-size: 1rem; }
-  .modal-content {
-    max-width: 90%;
-    padding: 12px;
-  }
-}
-/* ===== BOTÃO FLUTUANTE (ADICIONAR) ===== */
-.floating-btn {
-  position: fixed;
   right: 20px;
   bottom: 20px;
   width: 68px;
@@ -424,30 +337,10 @@ button.secondary {
 }
 
 .remove-btn::before {
-  content: "×"; /* símbolo universal de remover */
+  content: "×";
   line-height: 1;
 }
 
-/* ===== RESPONSIVO ===== */
-@media (max-width: 600px) {
-  .floating-btn {
-    width: 56px;
-    height: 56px;
-    font-size: 1.8rem;
-    right: 14px;
-    bottom: 14px;
-  }
-
-  .floating-btn::before {
-    font-size: 2rem;
-  }
-
-  .remove-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 1.2rem;
-  }
-}
 /* ===== BOTÃO DE LIMPAR TUDO ===== */
 .danger-btn {
   background: var(--danger);
@@ -459,48 +352,27 @@ button.secondary {
   cursor: pointer;
   transition: all 0.2s ease;
 }
-
 .danger-btn:hover {
   background: #ff6b6b;
   transform: scale(1.05);
 }
 
-@media (max-width: 600px) {
-  .filter-buttons {
-    justify-content: space-between;
-    width: 100%;
-  }
-  .filter-buttons button {
-    flex: 1;
-    min-width: 30%;
-  }
-}
-/* ===== AJUSTE VISUAL DO CAMPO DE PARCELAS ===== */
+/* ===== AJUSTES FINAIS ===== */
 #installments {
   background: var(--glass);
   color: var(--text);
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  width: 100%;
 }
-
-/* Melhora o espaçamento dos labels no modal */
 .form .label span {
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--muted);
 }
-
-/* ===== AJUSTE DO CONTAINER DE BOTÕES DE AÇÃO NA LISTA ===== */
 .transaction-list li > div:last-child {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 6px;
 }
-
-/* ===== EFEITO DE TOQUE MELHORADO (para celular) ===== */
 button:active,
 .floating-btn:active,
 .remove-btn:active,
@@ -508,9 +380,70 @@ button:active,
   transform: scale(0.95);
   opacity: 0.9;
 }
-
-/* ===== AJUSTE DE SOMBRA E DESTAQUE NO BOTÃO + ===== */
 .floating-btn {
   box-shadow: 0 6px 20px rgba(0, 230, 118, 0.5);
+}
+
+/* Corrige o ícone do calendário no tema dark */
+.filter-row input[type="month"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 600px) {
+  .container { padding: 0 10px 90px; }
+  .app-header .title h1 { font-size: 1.4rem; }
+
+  .floating-btn {
+    width: 56px;
+    height: 56px;
+    font-size: 1.8rem;
+    right: 14px;
+    bottom: 14px;
+  }
+  .floating-btn::before { font-size: 2rem; }
+
+  .remove-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+  }
+
+  /* ===== AJUSTE DOS BOTÕES DE FILTRO ===== */
+  .filter-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .filter-row input[type="month"] {
+    width: 100%;
+    font-size: 0.95rem;
+    padding: 8px 10px;
+  }
+  .filter-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    width: 100%;
+  }
+  .filter-buttons button {
+    flex: 1;
+    min-width: auto;
+    padding: 8px 6px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+  }
+  .danger-btn {
+    font-size: 0.85rem;
+    padding: 8px 6px;
+  }
+}
+.app-footer {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 18;
+  padding: 10px 12px;
+  text-align: center;
 }
 
